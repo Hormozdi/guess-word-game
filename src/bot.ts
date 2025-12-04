@@ -7,11 +7,16 @@ import { startHandler } from "./botAssets/startHandler.js";
 import { newGuessWordGame } from "./botAssets/startNewGuessWordGame.js";
 import { playLetter } from "./botAssets/playLetter.js";
 
-const agent = new SocksProxyAgent(process.env.PROXY || "");
+const agent = process.env.PROXY && new SocksProxyAgent(process.env.PROXY || "");
 
-const bot = new Telegraf(process.env.BOT_TOKEN || "", {
-  telegram: process.env.PROXY ? { agent } : {},
-});
+let bot;
+if (agent) {
+  bot = new Telegraf(process.env.BOT_TOKEN || "", {
+    telegram: { agent },
+  });
+} else {
+  bot = new Telegraf(process.env.BOT_TOKEN || "");
+}
 
 bot.start(startHandler);
 
