@@ -9,13 +9,11 @@ import { playLetter } from "./botAssets/playLetter.js";
 
 const agent = process.env.PROXY && new SocksProxyAgent(process.env.PROXY || "");
 
-let bot;
+let bot = new Telegraf(process.env.BOT_TOKEN || "");
 if (agent) {
   bot = new Telegraf(process.env.BOT_TOKEN || "", {
     telegram: { agent },
   });
-} else {
-  bot = new Telegraf(process.env.BOT_TOKEN || "");
 }
 
 bot.start(startHandler);
