@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model User {
+  id           Int        @id @default(autoincrement())
+  telegramId   Int        @unique
+  username     String?
+  phone        String?
+  goldCredit   Float      @default(0)
+  silverCredit Float      @default(0)
+  UserMeta     UserMeta[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model UserMeta {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  meta      String
+  value     String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GuessWordGame {
+  id        Int                   @id @default(autoincrement())
+  word      String
+  status    GuessWordGameStatus   @default(new)
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+  players   GuessWordGamePlayer[]
+}
+
+model GuessWordGamePlayer {
+  id             Int           @id @default(autoincrement())
+  game           GuessWordGame @relation(fields: [gameId], references: [id])
+  gameId         Int
+  telegramId     Int
+  messageId      Int
+  correctLetters Json?
+  wrongLetters   Json?
+}
+
+enum GuessWordGameStatus {
+  new
+  playing
+  finished
+  done
+}
