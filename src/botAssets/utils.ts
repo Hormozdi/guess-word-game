@@ -1,7 +1,7 @@
 import { Markup } from "telegraf";
 import type { InlineKeyboardButton } from "telegraf/types";
 
-const persianLetters = [
+export const persianLetters = [
   "ا",
   "ب",
   "پ",
@@ -80,7 +80,7 @@ export function createGameText(
     "",
     ...(isEnd
       ? [
-          "لطفا منتظر نهایی شدن پاسخگویی حریف باشید.",
+          "لطفا منتظر نهایی شدن نتیجه حریف باشید.",
           "امیدوارم شما برنده این دست باشید",
         ]
       : ["لطفا یکی از حروف زیر را انتخاب کنید:"]),

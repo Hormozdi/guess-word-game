@@ -6,6 +6,7 @@ import "dotenv/config";
 import { startHandler } from "./botAssets/startHandler.js";
 import { newGuessWordGame } from "./botAssets/startNewGuessWordGame.js";
 import { playLetter } from "./botAssets/playLetter.js";
+import { persianLetters } from "./botAssets/utils.js";
 
 const agent = process.env.PROXY && new SocksProxyAgent(process.env.PROXY || "");
 
@@ -29,11 +30,20 @@ bot.on("callback_query", async (ctx) => {
   if (callbackText == "new_word_guess_game") {
     await newGuessWordGame(ctx);
   } else if (callbackText == "refresh_start_message") {
+    const oldText = (ctx.callbackQuery?.message as any)?.text ?? "";
     const data = await startHandler(ctx);
-    await ctx.editMessageText(...data);
-  } else {
+    if (oldText == data[0]) {
+      await ctx.answerCbQuery("چیزی برای بروزرسانی نیست!");
+    } else {
+      await ctx.editMessageText(...data);
+    }
+  } else if (persianLetters.includes(callbackText)) {
     await playLetter(ctx, callbackText);
+  } else {
+    await ctx.reply("دستور ناشناخته است.");
   }
+
+  return;
 });
 
 export { bot };
