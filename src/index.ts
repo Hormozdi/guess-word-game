@@ -15,7 +15,7 @@ app.get("/", (c) => {
 app.get("/done-guess-word-games", async (c) => {
   const games = await prismaClient.guessWordGame.findMany({
     where: {
-      status: GuessWordGameStatus.playing,
+      status: GuessWordGameStatus.PLAYING,
     },
     include: {
       players: true,
@@ -34,7 +34,7 @@ app.get("/done-guess-word-games", async (c) => {
       await prismaClient.guessWordGame.update({
         where: { id: game.id },
         data: {
-          status: GuessWordGameStatus.done,
+          status: GuessWordGameStatus.DONE,
         },
       });
 

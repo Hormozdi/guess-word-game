@@ -13,7 +13,7 @@ export const newGuessWordGame = async (
 ) => {
   let games = await prismaClient.guessWordGame.findMany({
     orderBy: { createdAt: "desc" },
-    where: { status: GuessWordGameStatus.new },
+    where: { status: GuessWordGameStatus.NEW },
     include: { players: true },
   });
 
@@ -29,7 +29,7 @@ export const newGuessWordGame = async (
     word = game.word;
     await prismaClient.guessWordGame.update({
       where: { id: gameId },
-      data: { status: GuessWordGameStatus.playing },
+      data: { status: GuessWordGameStatus.PLAYING },
     });
   } else {
     word = words[Math.floor(Math.random() * words.length)];

@@ -1,7 +1,5 @@
 import type { Context, NarrowedContext } from "telegraf";
-import { GuessWordGameStatus } from "../../generated/prisma/enums.js";
 import { prismaClient } from "../../lib/prisma.js";
-import { words } from "../../lib/words.js";
 import { createGameText, createInlineKeyboard } from "./utils.js";
 import type { CallbackQuery, Update } from "telegraf/types";
 

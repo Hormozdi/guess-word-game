@@ -38,7 +38,7 @@ model UserMeta {
 model GuessWordGame {
   id        Int                   @id @default(autoincrement())
   word      String
-  status    GuessWordGameStatus   @default(new)
+  status    GuessWordGameStatus   @default(NEW)
   createdAt DateTime              @default(now())
   updatedAt DateTime              @updatedAt
   players   GuessWordGamePlayer[]
@@ -55,7 +55,7 @@ model GuessWordGamePlayer {
 }
 
 enum GuessWordGameStatus {
-  new
-  playing
-  done
+  NEW
+  PLAYING
+  DONE
 }
