@@ -57,6 +57,5 @@ model GuessWordGamePlayer {
 enum GuessWordGameStatus {
   new
   playing
-  finished
   done
 }

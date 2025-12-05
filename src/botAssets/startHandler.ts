@@ -2,7 +2,11 @@ import { Context, Markup } from "telegraf";
 import { prismaClient } from "../../lib/prisma.js";
 import { convertArrayToText } from "./utils.js";
 
-export const startHandler = async (ctx: Context) => {
+export function createWelcomeMessage() {
+  return;
+}
+
+export async function startHandler(ctx: Context): Promise<[string, object]> {
   const telegramId = ctx.from?.id || 0;
   const user = await prismaClient.user.upsert({
     where: { telegramId },
@@ -10,7 +14,7 @@ export const startHandler = async (ctx: Context) => {
     update: {},
   });
 
-  return ctx.reply(
+  return [
     convertArrayToText([
       "موجودی سکه طلا: " + user.goldCredit,
       "موجودی سکه نقره: " + user.silverCredit,
@@ -20,9 +24,15 @@ export const startHandler = async (ctx: Context) => {
       parse_mode: "HTML",
       reply_markup: {
         inline_keyboard: [
-          [Markup.button.callback("بازی حدس کلمه", "new_word_guess_game")],
+          [
+            Markup.button.callback(
+              "🔃 به روزرسانی پیام",
+              "refresh_start_message"
+            ),
+          ],
+          [Markup.button.callback("🔤 بازی حدس کلمه", "new_word_guess_game")],
         ],
       },
-    }
-  );
-};
+    },
+  ];
+}

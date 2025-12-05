@@ -16,7 +16,10 @@ if (agent) {
   });
 }
 
-bot.start(startHandler);
+bot.start(async (ctx) => {
+  const data = await startHandler(ctx);
+  ctx.reply(...data);
+});
 
 bot.on("callback_query", async (ctx) => {
   if (!("data" in ctx.callbackQuery)) return;
@@ -25,6 +28,9 @@ bot.on("callback_query", async (ctx) => {
 
   if (callbackText == "new_word_guess_game") {
     await newGuessWordGame(ctx);
+  } else if (callbackText == "refresh_start_message") {
+    const data = await startHandler(ctx);
+    await ctx.editMessageText(...data);
   } else {
     await playLetter(ctx, callbackText);
   }
