@@ -32,7 +32,7 @@ bot.on("callback_query", async (ctx) => {
   } else if (callbackText == "refresh_start_message") {
     const oldText = (ctx.callbackQuery?.message as any)?.text ?? "";
     const data = await startHandler(ctx);
-    if (oldText == data[0]) {
+    if (oldText.trim() == data[0].trim()) {
       await ctx.answerCbQuery("چیزی برای بروزرسانی نیست!");
     } else {
       await ctx.editMessageText(...data);

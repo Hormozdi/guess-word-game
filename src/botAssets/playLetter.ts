@@ -1,7 +1,12 @@
 import type { Context, NarrowedContext } from "telegraf";
 import { prismaClient } from "../../lib/prisma.js";
-import { createGameText, createInlineKeyboard } from "./utils.js";
+import {
+  convertArrayToText,
+  createGameText,
+  createInlineKeyboard,
+} from "./utils.js";
 import type { CallbackQuery, Update } from "telegraf/types";
+import { bot } from "../bot.js";
 
 export const playLetter = async (
   ctx: NarrowedContext<
@@ -56,7 +61,7 @@ export const playLetter = async (
     correctLetters.includes(letter)
   );
 
-  return ctx.editMessageText(
+  ctx.editMessageText(
     createGameText(
       game.word,
       correctLetters as string[],
@@ -74,4 +79,23 @@ export const playLetter = async (
       },
     }
   );
+
+  if (isEnd) {
+    setImmediate(async () => {
+      const sentMessage = await bot.telegram.sendMessage(
+        ctx.from.id,
+        convertArrayToText([
+          "لطفا منتظر نهایی شدن نتیجه حریف باشید.",
+          "امیدوارم شما برنده این دست باشید",
+        ])
+      );
+
+      await prismaClient.guessWordGamePlayer.update({
+        where: { id: player.id },
+        data: {
+          messageId: sentMessage.message_id,
+        },
+      });
+    });
+  }
 };
