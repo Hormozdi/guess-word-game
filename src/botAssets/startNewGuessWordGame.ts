@@ -12,13 +12,13 @@ export const newGuessWordGame = async (
   >
 ) => {
   let games = await prismaClient.guessWordGame.findMany({
-    orderBy: { createdAt: "desc" },
     where: { status: GuessWordGameStatus.NEW },
+    take: 10,
     include: { players: true },
   });
 
   const game = games.find(
-    (game) => game.players[0]?.telegramId !== ctx.from.id
+    (g) => String(g.players[0]?.telegramId) !== String(ctx.from.id)
   );
 
   let gameId;

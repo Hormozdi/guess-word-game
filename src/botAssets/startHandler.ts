@@ -8,6 +8,9 @@ export function createWelcomeMessage() {
 
 export async function startHandler(ctx: Context): Promise<[string, object]> {
   const telegramId = ctx.from?.id || 0;
+
+  console.log(telegramId);
+
   const user = await prismaClient.user.upsert({
     where: { telegramId },
     create: { telegramId, silverCredit: 10 },

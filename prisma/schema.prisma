@@ -15,7 +15,7 @@ datasource db {
 
 model User {
   id           Int        @id @default(autoincrement())
-  telegramId   Int        @unique
+  telegramId   BigInt     @unique
   username     String?
   phone        String?
   goldCredit   Float      @default(0)
@@ -48,7 +48,7 @@ model GuessWordGamePlayer {
   id             Int           @id @default(autoincrement())
   game           GuessWordGame @relation(fields: [gameId], references: [id])
   gameId         Int
-  telegramId     Int
+  telegramId     BigInt
   messageId      Int
   correctLetters Json?
   wrongLetters   Json?

@@ -29,7 +29,9 @@ export const playLetter = async (
     },
   });
 
-  const player = game.players.find((el) => el.telegramId === ctx.from.id);
+  const player = game.players.find(
+    (el) => String(el.telegramId) === String(ctx.from.id)
+  );
 
   if (!player) {
     return;
@@ -61,41 +63,43 @@ export const playLetter = async (
     correctLetters.includes(letter)
   );
 
-  ctx.editMessageText(
-    createGameText(
-      game.word,
-      correctLetters as string[],
-      wrongLetters as string[],
-      isEnd
-    ),
-    {
-      reply_markup: {
-        inline_keyboard: isEnd
-          ? []
-          : createInlineKeyboard(
-              correctLetters as string[],
-              wrongLetters as string[]
-            ),
-      },
-    }
-  );
+  setImmediate(async () => {
+    await bot.telegram.editMessageText(
+      ctx.from.id,
+      player.messageId,
+      undefined,
+      createGameText(
+        game.word,
+        correctLetters as string[],
+        wrongLetters as string[],
+        isEnd
+      ),
+      {
+        reply_markup: {
+          inline_keyboard: isEnd
+            ? []
+            : createInlineKeyboard(
+                correctLetters as string[],
+                wrongLetters as string[]
+              ),
+        },
+      }
+    );
+  });
 
   if (isEnd) {
     setImmediate(async () => {
-      const sentMessage = await bot.telegram.sendMessage(
+      await bot.telegram.editMessageText(
         ctx.from.id,
+        player.messageId,
+        undefined,
         convertArrayToText([
+          "کلمه مورد نظر: " + game.word,
+          "",
           "لطفا منتظر نهایی شدن نتیجه حریف باشید.",
           "امیدوارم شما برنده این دست باشید",
         ])
       );
-
-      await prismaClient.guessWordGamePlayer.update({
-        where: { id: player.id },
-        data: {
-          messageId: sentMessage.message_id,
-        },
-      });
     });
   }
 };

@@ -44,6 +44,8 @@ app.get("/done-guess-word-games", async (c) => {
       const p1wll = countWrong(p1);
       const p2wll = countWrong(p2);
 
+      console.log(p1wll, p2wll);
+
       let winner: GuessWordGamePlayer | null = null;
       let loser: GuessWordGamePlayer | null = null;
 
@@ -61,7 +63,7 @@ app.get("/done-guess-word-games", async (c) => {
       }
 
       await bot.telegram.editMessageText(
-        winner.telegramId,
+        String(winner.telegramId),
         winner.messageId,
         undefined,
         convertArrayToText([
@@ -72,7 +74,7 @@ app.get("/done-guess-word-games", async (c) => {
       );
 
       await bot.telegram.editMessageText(
-        loser.telegramId,
+        String(loser.telegramId),
         loser.messageId,
         undefined,
         convertArrayToText([
