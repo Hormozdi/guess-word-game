@@ -62,27 +62,31 @@ app.get("/done-guess-word-games", async (c) => {
         return;
       }
 
-      await bot.telegram.editMessageText(
-        String(winner.telegramId),
-        winner.messageId,
-        undefined,
-        convertArrayToText([
-          "🎉 تبریک! شما در بازی کلمه «" + game.word + "» برنده شدید! 🎉",
-          "",
-          "حساب کاربری شما به میزان 1.8 سکه شارژ شد.",
-        ])
-      );
+      try {
+        await bot.telegram.editMessageText(
+          String(winner.telegramId),
+          winner.messageId,
+          undefined,
+          convertArrayToText([
+            "🎉 تبریک! شما در بازی کلمه «" + game.word + "» برنده شدید! 🎉",
+            "",
+            "حساب کاربری شما به میزان 1.8 سکه شارژ شد.",
+          ])
+        );
+      } catch (error) {}
 
-      await bot.telegram.editMessageText(
-        String(loser.telegramId),
-        loser.messageId,
-        undefined,
-        convertArrayToText([
-          "بازی کلمه «" + game.word + "» تمام شد!",
-          "",
-          "متاسفانه شما بازنده شدید. انشاالله دفعه بعد شما برنده خواهید شد!",
-        ])
-      );
+      try {
+        await bot.telegram.editMessageText(
+          String(loser.telegramId),
+          loser.messageId,
+          undefined,
+          convertArrayToText([
+            "بازی کلمه «" + game.word + "» تمام شد!",
+            "",
+            "متاسفانه شما بازنده شدید. انشاالله دفعه بعد شما برنده خواهید شد!",
+          ])
+        );
+      } catch (error) {}
 
       await prismaClient.guessWordGame.update({
         where: { id: game.id },
