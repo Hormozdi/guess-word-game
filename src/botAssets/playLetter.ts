@@ -75,6 +75,7 @@ export const playLetter = async (
         isEnd
       ),
       {
+        parse_mode: "HTML",
         reply_markup: {
           inline_keyboard: isEnd
             ? []

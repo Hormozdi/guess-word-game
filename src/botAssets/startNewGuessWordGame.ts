@@ -1,5 +1,5 @@
 import type { Context, NarrowedContext } from "telegraf";
-import { GuessWordGameStatus } from "../../generated/prisma/enums.js";
+import { GameStatus } from "../../generated/prisma/enums.js";
 import { prismaClient } from "../../lib/prisma.js";
 import { words } from "../../lib/words.js";
 import { createGameText, createInlineKeyboard } from "./utils.js";
@@ -12,7 +12,7 @@ export const newGuessWordGame = async (
   >
 ) => {
   let games = await prismaClient.guessWordGame.findMany({
-    where: { status: GuessWordGameStatus.NEW },
+    where: { status: GameStatus.NEW },
     take: 10,
     include: { players: true },
   });
@@ -29,7 +29,7 @@ export const newGuessWordGame = async (
     word = game.word;
     await prismaClient.guessWordGame.update({
       where: { id: gameId },
-      data: { status: GuessWordGameStatus.PLAYING },
+      data: { status: GameStatus.PLAYING },
     });
   } else {
     word = words[Math.floor(Math.random() * words.length)];
@@ -41,6 +41,7 @@ export const newGuessWordGame = async (
   }
 
   const sentMessage = await ctx.reply(createGameText(word, [], []), {
+    parse_mode: "HTML",
     reply_markup: {
       inline_keyboard: createInlineKeyboard([], []),
     },

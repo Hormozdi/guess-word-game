@@ -1,6 +1,7 @@
 import { Context, Markup } from "telegraf";
 import { prismaClient } from "../../lib/prisma.js";
 import { convertArrayToText } from "./utils.js";
+import { randomAds } from "../bot.js";
 
 export function createWelcomeMessage() {
   return;
@@ -19,6 +20,9 @@ export async function startHandler(ctx: Context): Promise<[string, object]> {
 
   return [
     convertArrayToText([
+      randomAds(),
+      "",
+      "🎉 به ربات بازی های کلمه و عدد خوش آمدید! 🎉",
       "موجودی سکه طلا: " + user.goldCredit,
       "موجودی سکه نقره: " + user.silverCredit,
       "",
@@ -34,6 +38,7 @@ export async function startHandler(ctx: Context): Promise<[string, object]> {
             ),
           ],
           [Markup.button.callback("🔤 بازی حدس کلمه", "new_word_guess_game")],
+          [Markup.button.callback("🔢 بازی حدس عدد", "new_bingo_game")],
         ],
       },
     },
